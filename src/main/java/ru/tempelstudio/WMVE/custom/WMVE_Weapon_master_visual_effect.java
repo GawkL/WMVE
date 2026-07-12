@@ -181,8 +181,7 @@ public class WMVE_Weapon_master_visual_effect {
                                 swingRaw = swingRaw - Double.parseDouble(rawHandSwing) + 0.001;
                             }
 
-                            // Выводим сообщение и закрываем экран
-                            client.player.sendSystemMessage(Component.literal("успех"));
+//                            client.player.sendSystemMessage(Component.literal("успех")); debug
                             client.setScreen(null);
                             break; // Выходим из цикла
                         }
