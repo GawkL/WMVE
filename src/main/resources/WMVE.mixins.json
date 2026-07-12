@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "ru.tempelstudio.WMVE.mixin",
+	"refmap": "wmve-refmap.json",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"ExampleMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

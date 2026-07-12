@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "wmve",
+	"version": "${version}",
+	"name": "WMVE",
+	"description": "Shows your swing range with particles",
+	"authors": [
+		"TempelStudio"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "GPL-3.0-or-later",
+	"icon": "assets/wmve/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"ru.tempelstudio.WMVE.WMVE"
+		],
+		"fabric-datagen": [
+			"ru.tempelstudio.WMVE.WMVEDataGenerator"
+		],
+		"client": [
+			"ru.tempelstudio.WMVE.WMVEClient"
+		]
+	},
+	"mixins": [
+		"WMVE.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
