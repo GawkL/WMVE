@@ -4,7 +4,8 @@
 	"refmap": "wmve-refmap.json",
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"CommandDispatcherMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

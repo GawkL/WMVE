@@ -4,7 +4,7 @@ package ru.tempelstudio.WMVE.custom.particles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.SingleQuadParticle; // Новый базовый класс
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
@@ -15,14 +15,14 @@ public class SwingParticle extends SingleQuadParticle {
     private final SingleQuadParticle.Layer layer;
 
     public SwingParticle(ClientLevel clientLevel, double x, double y, double z,
-                         SpriteSet spriteSet, double xSpeed, double ySpeed, double zSpeed) {
-        super(clientLevel, x, y, z, spriteSet.get(net.minecraft.util.RandomSource.create()));
+                         SpriteSet sprites, double xSpeed, double ySpeed, double zSpeed) {
+        super(clientLevel, x, y, z, sprites.first());
 
         this.xd = xSpeed;
         this.yd = ySpeed;
         this.zd = zSpeed;
 
-        var sprite = spriteSet.get(RandomSource.create());
+        var sprite = sprites.first();
         this.setSprite(sprite);
         this.layer = SingleQuadParticle.Layer.bySprite(sprite);
 

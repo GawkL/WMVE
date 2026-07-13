@@ -21,7 +21,6 @@ import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.monster.*;
-import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
 import net.minecraft.world.entity.monster.spider.Spider;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 
 // Инвентарь и Предметы
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -52,6 +50,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.state.BlockState;
+import ru.tempelstudio.WMVE.custom.Debug.Debug;
 import ru.tempelstudio.WMVE.custom.particles.CustomParticles;
 
 import java.util.ArrayList;
@@ -66,7 +65,6 @@ public class WMVE_Weapon_master_visual_effect {
     static double swingRaw = 0.0;
     static double swing = 0.0;
     static double b = -swingRaw;
-    // static boolean isCurrentlyPressed;
     private static boolean wasPressed = false;
     static Vec3 playerPos;
     static Vec3 playerRotation;
@@ -99,9 +97,7 @@ public class WMVE_Weapon_master_visual_effect {
     private static void clickregister(Minecraft client) {
             // Убедимся, что клиент и игрок существуют (могут быть null во время загрузки мира)
             if (client == null || client.player == null) return;
-            // Считываем состояние ЛКМ напрямую через GLFW, чтобы избежать коллизии с биндами
             KeyMapping attackKey = client.options.keyAttack; // привязка не посредственно к кнопке удара
-            boolean attackPressed = attackKey.isDown(); //
             if (turn <= swing) {
                 // Анимация создаёт по три пака партиклов за раз
                 particlegen(client);
@@ -113,7 +109,7 @@ public class WMVE_Weapon_master_visual_effect {
             }
 
         // Если в данже
-        if (in_Dungeon) {
+        if (in_Dungeon || Debug.Dungeon()) {
             if (!playerIsBers) {
                 ClientPacketListener networkHandler = Minecraft.getInstance().getConnection();
                 if (networkHandler != null) {
@@ -147,13 +143,13 @@ public class WMVE_Weapon_master_visual_effect {
                     Pattern patternSword = Pattern.compile("(SWORD)|(LONGSWORD)");
 
                     Item.TooltipContext tooltipContext = Item.TooltipContext.of(client.level);
-                    net.minecraft.world.item.TooltipFlag tooltipFlag = net.minecraft.world.item.TooltipFlag.Default.NORMAL;
+                    TooltipFlag tooltipFlag = TooltipFlag.Default.NORMAL;
 
                     for (net.minecraft.world.inventory.Slot slot : containerScreen.getMenu().slots) {
                         ItemStack stackInSlot = slot.getItem();
 
                         if (stackInSlot.isEmpty() || !stackInSlot.is(Items.STONE_SWORD)) {
-                            continue; // Пропускаем пустые слоты и не каменные мечи
+                            continue;
                         }
 
                         // Получаем тултип предмета в слоте
@@ -181,7 +177,7 @@ public class WMVE_Weapon_master_visual_effect {
                                 swingRaw = swingRaw - Double.parseDouble(rawHandSwing) + 0.001;
                             }
 
-//                            client.player.sendSystemMessage(Component.literal("успех")); debug
+                            if (Debug.Messages()) client.player.sendSystemMessage(Component.literal("Успех! Swing Range: " + swingRaw));
                             client.setScreen(null);
                             break; // Выходим из цикла
                         }
@@ -190,7 +186,7 @@ public class WMVE_Weapon_master_visual_effect {
             }
             else {
                 // Если была нажата кнопка удара
-                if (attackPressed && !wasPressed && Minecraft.getInstance().screen == null && playerIsBers) {
+                if (attackKey.isDown() && !wasPressed && Minecraft.getInstance().screen == null && (playerIsBers || Debug.Classes())) {
                     // Если меч в руке
                     hand = client.player.getInventory().getSelectedItem();
                     String regexSword = "(SWORD)|(LONGSWORD)";
@@ -213,7 +209,7 @@ public class WMVE_Weapon_master_visual_effect {
                     }
                 }
                 // Сброс статуса для одиночного нажатия
-                wasPressed = attackPressed;
+                wasPressed = attackKey.isDown();
             }
         }
     }
@@ -297,5 +293,4 @@ public class WMVE_Weapon_master_visual_effect {
             else in_Dungeon = false;
         }
     }
-
 }
