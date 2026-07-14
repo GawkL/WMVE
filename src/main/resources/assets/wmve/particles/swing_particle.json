@@ -1,5 +1,9 @@
 {
   "textures": [
-    "wmve:swing_particle"
+    "wmve:swing_1",
+    "wmve:swing_2",
+    "wmve:swing_3",
+    "wmve:swing_4",
+    "wmve:swing_5"
   ]
 }

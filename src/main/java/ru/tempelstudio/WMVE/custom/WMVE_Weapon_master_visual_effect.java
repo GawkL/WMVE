@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 
 
 public class WMVE_Weapon_master_visual_effect {
-    static double turn;
+    static boolean turn;
     static double swingRaw = 0.0;
     static double swing = 0.0;
     static double b = -swingRaw;
@@ -98,14 +98,10 @@ public class WMVE_Weapon_master_visual_effect {
             // Убедимся, что клиент и игрок существуют (могут быть null во время загрузки мира)
             if (client == null || client.player == null) return;
             KeyMapping attackKey = client.options.keyAttack; // привязка не посредственно к кнопке удара
-            if (turn <= swing) {
+            if (turn) {
                 // Анимация создаёт по три пака партиклов за раз
                 particlegen(client);
-                turn=turn+swing/10;
-                particlegen(client);
-                turn=turn+swing/10;
-                particlegen(client);
-                turn=turn+swing/10;
+                turn=false;
             }
 
         // Если в данже
@@ -199,7 +195,7 @@ public class WMVE_Weapon_master_visual_effect {
                         boolean find = matcherSwingHand.find();
                         if (find) swing = swingRaw + (Double.parseDouble(matcherSwingHand.group().replaceAll("[^0-9^.]", "")) + 0.001);
                         else swing = swingRaw;
-                        turn = -swing;
+                        turn = true;
                         playerPos = client.player.position();
                         playerRotation = client.player.calculateViewVector(client.player.getXRot(), client.player.getYRot());
                         playerYaw = Math.toRadians(client.player.getYRot());
@@ -216,64 +212,58 @@ public class WMVE_Weapon_master_visual_effect {
 
     private static void particlegen(Minecraft client) {
         if (client == null || client.player == null) return;
-        //Сдвиг в сторону
-        for (b = -swing;b < swing; b=b+swing/10) {
-            //Сброс типа партикла
-            if (turn == b) {
-                particleType = CustomParticles.SWING_PARTICLE;
-                // Линия вперёд
-                for (double i = 0; i < swing; i=i+swing/10) {
-                    // Расчёт места спавна партикла
-                    double x = playerPos.x + playerRotation.x * i + Math.cos(playerYaw)*(b/swing*i);
-                    double y = playerPos.y + playerRotation.y * i;
-                    double z = playerPos.z + playerRotation.z * i + Math.sin(playerYaw)*(b/swing*i);
-                    // Проверка врезалось ли в стену
-                    BlockPos pos = new BlockPos((int)x, (int)Math.ceil(y),(int)z);
-                    checkBlock = client.level.getBlockState(pos);
-                    if (checkBlock.isCollisionShapeFullBlock(client.level,pos) && !checkBlock.hasBlockEntity()) {
-                        particleType = ParticleTypes.END_ROD;
-                        if (!playedSoundB) {
-                            // client.player.playSound(SoundEvents.BLOCK_GRINDSTONE_USE);
-                            playedSoundB = true;
-                        }
-                        break;
+        //Сброс типа партикла
+            particleType = CustomParticles.SWING_PARTICLE;
+            double i = swing / 2;
+            // Расчёт места спавна партикла
+            double x = playerPos.x + playerRotation.x * i + Math.cos(playerYaw) * (b / swing * i);
+            double y = playerPos.y + playerRotation.y * i;
+            double z = playerPos.z + playerRotation.z * i + Math.sin(playerYaw) * (b / swing * i);
+            // Проверка врезалось ли в стену
+            BlockPos pos = new BlockPos((int) x, (int) Math.ceil(y), (int) z);
+//                    checkBlock = client.level.getBlockState(pos);
+//                    if (checkBlock.isCollisionShapeFullBlock(client.level,pos) && !checkBlock.hasBlockEntity()) {
+//                        particleType = ParticleTypes.END_ROD;
+//                        if (!playedSoundB) {
+//                            // client.player.playSound(SoundEvents.BLOCK_GRINDSTONE_USE);
+//                            playedSoundB = true;
+//                        }
+//                    }
+            // Ищем врагов
+            AABB box = new AABB(pos);
+            for (Entity entity : client.level.getEntitiesOfClass(Entity.class, box, e -> true)) {
+                if (entity instanceof Skeleton
+                        || entity instanceof Zombie
+                        || entity instanceof Player && entity != client.player
+                        || entity instanceof EnderMan
+                        || entity instanceof WitherBoss
+                        || entity instanceof WitherSkeleton
+                        || entity instanceof Guardian
+                        || entity instanceof EnderDragon
+                        || entity instanceof Sheep
+                        || entity instanceof Rabbit
+                        || entity instanceof Cow
+                        || entity instanceof Chicken
+                        || entity instanceof IronGolem
+                        || entity instanceof Spider
+                        || entity instanceof Bat
+                ) {
+                    if (!entityList.contains(entity)) { // маркер попадания по мобу (1 раз за удар)
+                        entityList.add(entity);
+                        client.player.crit(entity);
                     }
-                    // Ищем врагов
-                    AABB box = new AABB(pos);
-                    for (Entity entity : client.level.getEntitiesOfClass(Entity.class, box, e -> true)) {
-                        if (entity instanceof Skeleton
-                                || entity instanceof Zombie
-                                || entity instanceof Player && entity != client.player
-                                || entity instanceof EnderMan
-                                || entity instanceof WitherBoss
-                                || entity instanceof WitherSkeleton
-                                || entity instanceof Guardian
-                                || entity instanceof EnderDragon
-                                || entity instanceof Sheep
-                                || entity instanceof Rabbit
-                                || entity instanceof Cow
-                                || entity instanceof Chicken
-                                || entity instanceof IronGolem
-                                || entity instanceof Spider
-                                || entity instanceof Bat
-                        ) {
-                            if (!entityList.contains(entity)) { // маркер попадания по мобу (1 раз за удар)
-                                entityList.add(entity);
-                                client.player.crit(entity);
-                            }
-                            if (!playedSoundE) { // Делаем звук (не больше 1 раза за удар)
-                                client.player.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
-                                playedSoundE = true;
-                            }
-                            break;
-                        }
+                    if (!playedSoundE) { // Делаем звук (не больше 1 раза за удар)
+                        client.player.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
+                        playedSoundE = true;
                     }
-                    //Партикл
-                    if (i > 0) client.level.addParticle(particleType, x, y+1, z, 0, -1, 0);
+                    break;
                 }
             }
+            //Партикл
+            if (i > 0) client.particleEngine.createParticle(CustomParticles.SWING_PARTICLE,x,y+1,z,0,0,0).scale((float) swing);
+
         }
-    }
+
 
     public static void detectDungeon (Minecraft client) {
         // Убедимся, что клиент и игрок существуют (могут быть null во время загрузки мира)
