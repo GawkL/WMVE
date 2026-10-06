@@ -1,8 +1,12 @@
 package ru.tempelstudio.WMVE.custom.particles;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -11,14 +15,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-import net.minecraft.client.Camera;
 import ru.tempelstudio.WMVE.custom.Render.WMVERenderLayers;
 
-public class SwingParticle extends SingleQuadParticle {
+public class SwingRParticle extends SingleQuadParticle {
 
-    private final SingleQuadParticle.Layer layer;
+    private final Layer layer;
     private final SpriteSet sprites;
-    private final org.joml.Quaternionf fixedRotation = new org.joml.Quaternionf();
+    private final Quaternionf fixedRotation = new Quaternionf();
 
     @Override
     public Particle scale(float scale) {
@@ -26,8 +29,8 @@ public class SwingParticle extends SingleQuadParticle {
         return this;
     }
 
-    public SwingParticle(ClientLevel clientLevel, double x, double y, double z,
-                         SpriteSet sprites) {
+    public SwingRParticle(ClientLevel clientLevel, double x, double y, double z,
+                          SpriteSet sprites) {
         super(clientLevel, x, y, z, sprites.first());
         this.sprites = sprites;
         this.setSpriteFromAge(sprites);
@@ -35,10 +38,10 @@ public class SwingParticle extends SingleQuadParticle {
         this.xd = 0.0f;
         this.yd = 0.0f;
         this.zd = 0.0f;
-        this.lifetime = 4;
+        this.lifetime = 5;
         this.hasPhysics = false;
         this.gravity = 0.0f;
-        this.alpha = 0.5f;
+        this.alpha = 0.7f;
         this.scale(1);
         LocalPlayer player = Minecraft.getInstance().player;
 
@@ -84,7 +87,7 @@ public class SwingParticle extends SingleQuadParticle {
     }
 
     @Override
-    protected SingleQuadParticle.Layer getLayer() {
+    protected Layer getLayer() {
         return this.layer;
     }
 
@@ -100,7 +103,7 @@ public class SwingParticle extends SingleQuadParticle {
         public Particle createParticle(SimpleParticleType parameters, ClientLevel world,
                                        double x, double y, double z,
                                        double velocityX, double velocityY, double velocityZ, RandomSource random) {
-            return new SwingParticle(world, x, y, z, this.spriteSet);
+            return new SwingRParticle(world, x, y, z, this.spriteSet);
         }
     }
 }

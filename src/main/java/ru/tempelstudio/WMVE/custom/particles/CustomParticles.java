@@ -10,6 +10,10 @@ import ru.tempelstudio.WMVE.WMVE;
 public class CustomParticles {
     public static final SimpleParticleType SWING_PARTICLE =
             registerParticle("swing_particle", FabricParticleTypes.simple());
+    public static final SimpleParticleType SWINGL_PARTICLE =
+            registerParticle("swingl_particle", FabricParticleTypes.simple());
+    public static final SimpleParticleType SWINGR_PARTICLE =
+            registerParticle("swingr_particle", FabricParticleTypes.simple());
     private static SimpleParticleType registerParticle(String name, SimpleParticleType particleType) {
         return Registry.register(
                 BuiltInRegistries.PARTICLE_TYPE,
