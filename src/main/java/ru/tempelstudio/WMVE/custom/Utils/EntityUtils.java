@@ -5,6 +5,7 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.pig.Pig;
 import net.minecraft.world.entity.animal.rabbit.Rabbit;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
@@ -41,6 +42,7 @@ public final class EntityUtils {
                 || entity instanceof Rabbit
                 || entity instanceof Cow
                 || entity instanceof Chicken
+                || entity instanceof Pig
                 || entity instanceof IronGolem
                 || entity instanceof Spider
                 || entity instanceof Bat;

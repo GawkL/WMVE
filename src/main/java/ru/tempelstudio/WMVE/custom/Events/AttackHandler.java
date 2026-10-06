@@ -77,6 +77,8 @@ public final class AttackHandler {
         state.turn = true;
         state.playerPos =
                 client.player.position();
+        state.playerCenterPos =
+                client.player.getBoundingBox().getCenter();
         state.playerEyePos =
                 client.player.getEyePosition();
         state.playerRotation =

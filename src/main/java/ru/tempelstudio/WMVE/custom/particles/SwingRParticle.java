@@ -53,7 +53,7 @@ public class SwingRParticle extends SingleQuadParticle {
                 .rotateY(-Mth.DEG_TO_RAD * yaw)
                 .rotateX(Mth.DEG_TO_RAD * pitch);
 
-        this.fixedRotation.rotateX(Mth.DEG_TO_RAD * 90f);
+        this.fixedRotation.rotateX(Mth.DEG_TO_RAD * 85f);
         this.fixedRotation.rotateY(Mth.DEG_TO_RAD * 180f);
     }
 

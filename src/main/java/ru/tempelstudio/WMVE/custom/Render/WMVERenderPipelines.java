@@ -2,7 +2,9 @@ package ru.tempelstudio.WMVE.custom.Render;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -22,7 +24,10 @@ public final class WMVERenderPipelines {
                             .withColorTargetState(
                                     new ColorTargetState(BlendFunction.TRANSLUCENT)
                             )
-                            .withCull(false) // <-- самое главное
+                            .withDepthStencilState(
+                                    new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false)
+                            )
+                            .withCull(false)
                             .build()
             );
 }

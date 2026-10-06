@@ -14,6 +14,7 @@ public class ClientState {
     public double swing;
 
     public Vec3 playerPos;
+    public Vec3 playerCenterPos;
     public Vec3 playerEyePos;
     public Vec3 playerRotation;
     public double playerYaw;
